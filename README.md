@@ -20,6 +20,6 @@ The bot listens to `voiceStateUpdate` events.
 When a user joins a voice channel, a timestamp is stored in memory.  
 When they leave, the duration is calculated and added to their cumulative total.
 
-Every 5 minutes, the bot will store the current state of users in a JSON file `users.json`.
+Every minute, the bot will attempt to store the current state of users in a JSON file `users.json`. (Only if the data has been updated!)
 
 If JSON storage is not sufficient for your case and you'd like to use an actual database system, please update `/src/repository.ts`.
