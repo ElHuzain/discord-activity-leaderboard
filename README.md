@@ -1,4 +1,4 @@
-# Voice Time Tracker Bot
+# Discord voice leaderboard bot
 
 A Discord bot made with Discord.js. It tracks how long users spend in voice channels and stores them. Then, everyday, it sends a leaderboard of top users based on their cumulative time.
 
