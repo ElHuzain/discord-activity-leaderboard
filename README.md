@@ -4,7 +4,7 @@ A Discord bot made with Discord.js. It tracks how long users spend in voice chan
 
 ## Installation
 
-1. Clone the repository
+1. Clone the repository `git clone git@github.com:ElHuzain/discord-voice-leaderboard.git`
 2. Run `npm install`
 3. Update `.env` with your configurations:
   1. `DISCORD_TOKEN` - Your Discord bot token
