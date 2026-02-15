@@ -11,7 +11,7 @@ A Discord bot made with Discord.js. It tracks how long users spend in voice chan
   2. `LOG_CHANNEL_ID` - ID of channel where logs will be sent
   3. `ANNOUNCEMENT_CHANNEL_ID` - ID of channel where daily announcements will be sent
   4. `GUILD_ID` - ID of your Discord server
-  5. `IGNORED_CHANNEL_IDS`: Comma separated list of ids - IDs of voice channels to ignore (e.g, AFK channels). Should be comma separated list of ids
+  5. `IGNORED_CHANNEL_IDS`: Comma separated list of ids - IDs of voice channels to ignore (e.g, AFK channels).
 4. Start the bot with `npm run dev`
 
 ## How It Works
