@@ -1,0 +1,42 @@
+import User, { UserDTO } from "../model/user";
+import { users } from "./abstractStorage";
+
+export default class UserRepository {
+  constructor() {}
+
+  async save(user: User | UserDTO): Promise<void> {
+    const foundUser = users.find((u) => u.id === user.id);
+
+    if (foundUser) {
+      const newUserArray = users.map((u) => {
+        if (u.id === foundUser.id) {
+          return {
+            ...user,
+          };
+        }
+
+        return u;
+      });
+
+      newUserArray.find((u) => u.id === user.id);
+
+      users.splice(0, users.length, ...newUserArray);
+    } else {
+      users.push({
+        id: user.id,
+        lastJoinedAt: user.lastJoinedAt,
+        cumulative: user.cumulative,
+      });
+    }
+  }
+
+  async getById(userId: string): Promise<User | null> {
+    const user = users.find((u) => u.id === userId);
+
+    if (!user) {
+      return null;
+    } else {
+      return new User(user);
+    }
+  }
+}
