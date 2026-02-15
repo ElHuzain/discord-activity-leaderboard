@@ -1,5 +1,5 @@
 import User, { UserDTO } from "../model/user";
-import { users } from "./abstractStorage";
+import { users, setUpdated } from "./abstractStorage";
 
 export default class UserRepository {
   constructor() {}
@@ -28,6 +28,8 @@ export default class UserRepository {
         cumulative: user.cumulative,
       });
     }
+
+    setUpdated(true);
   }
 
   async getById(userId: string): Promise<User | null> {
