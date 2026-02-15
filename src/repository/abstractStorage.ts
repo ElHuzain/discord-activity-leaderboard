@@ -17,9 +17,7 @@ const loadDataSync = async () => {
     const data = fs.readFileSync(RELATIVE_FILE_PATH, "utf8");
     const parsed = JSON.parse(data) as UserDTO[];
     users = parsed;
-  } catch (err) {
-    console.error(err);
-  }
+  } catch (err) {}
 };
 
 const init = async () => {
