@@ -3,17 +3,14 @@ import UserModel from "./model/user.js";
 import { GUILD_ID, IGNORED_VOICE_CHANNEL_IDS } from "./lib/env.js";
 
 const handleVoiceStateUpdate = async (oldState, newState) => {
-  if (
-    IGNORED_VOICE_CHANNEL_IDS.includes(oldState.channelId) ||
-    IGNORED_VOICE_CHANNEL_IDS.includes(newState.channelId) ||
-    oldState.guildId !== GUILD_ID ||
-    newState.guildId !== GUILD_ID
-  ) {
-    return;
-  }
-
-  const isOld = !!oldState.channel;
-  const isNew = !!newState.channel;
+  const isOld =
+    !!oldState.channel &&
+    !IGNORED_VOICE_CHANNEL_IDS.includes(oldState.channelId) &&
+    oldState.guild.id === GUILD_ID;
+  const isNew =
+    !!newState.channel &&
+    !IGNORED_VOICE_CHANNEL_IDS.includes(newState.channelId) &&
+    newState.guild.id === GUILD_ID;
 
   if (isNew && !isOld) {
     handleUserJoin(newState);
