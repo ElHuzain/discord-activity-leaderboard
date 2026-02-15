@@ -7,11 +7,11 @@ A Discord bot made with Discord.js. It tracks how long users spend in voice chan
 1. Clone the repository `git clone git@github.com:ElHuzain/discord-voice-leaderboard.git`
 2. Run `npm install`
 3. Update `.env` with your configurations:
-  1. `DISCORD_TOKEN` - Your Discord bot token
-  2. `LOG_CHANNEL_ID` - ID of channel where logs will be sent
-  3. `ANNOUNCEMENT_CHANNEL_ID` - ID of channel where daily announcements will be sent
-  4. `GUILD_ID` - ID of your Discord server
-  5. `IGNORED_CHANNEL_IDS`: Comma separated list of ids - IDs of voice channels to ignore (e.g, AFK channels).
+    - `DISCORD_TOKEN` - Your Discord bot token
+    - `LOG_CHANNEL_ID` - ID of channel where logs will be sent
+    - `ANNOUNCEMENT_CHANNEL_ID` - ID of channel where daily announcements will be sent
+    - `GUILD_ID` - ID of your Discord server
+    - `IGNORED_CHANNEL_IDS`: Comma separated list of ids - IDs of voice channels to ignore (e.g, AFK channels).
 4. Start the bot with `npm run start`
 
 ## How It Works
