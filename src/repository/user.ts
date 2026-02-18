@@ -18,14 +18,13 @@ export default class UserRepository {
         return u;
       });
 
-      newUserArray.find((u) => u.id === user.id);
-
       users.splice(0, users.length, ...newUserArray);
     } else {
       users.push({
         id: user.id,
         lastJoinedAt: user.lastJoinedAt,
         cumulative: user.cumulative,
+        totalCumulative: user.cumulative,
       });
     }
 
@@ -40,5 +39,34 @@ export default class UserRepository {
     } else {
       return new User(user);
     }
+  }
+
+  async getTopUsers(limit: number): Promise<User[]> {
+    const topUsers = [...users]
+      .filter((user) => user.cumulative > 0)
+      .sort((a, b) => b.cumulative - a.cumulative)
+      .slice(0, limit)
+      .map((user) => new User(user));
+
+    return topUsers;
+  }
+
+  async resetAllUsers(): Promise<void> {
+    const newUserArray = users.map((user) => {
+      const u = new User({
+        id: user.id,
+        lastJoinedAt: user.lastJoinedAt,
+        cumulative: user.cumulative,
+        totalCumulative: user.totalCumulative,
+      });
+
+      u.reset();
+
+      return u;
+    });
+
+    users.splice(0, users.length, ...newUserArray);
+
+    setUpdated(true);
   }
 }
