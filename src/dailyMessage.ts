@@ -25,35 +25,66 @@ const postDailyAnnouncement = async (client: Client) => {
 
     const repository = new UserRepository();
 
-    const users = await repository.getTopUsers(3);
+    const users = await repository.getTopUsers(5);
 
     const topUsers = await Promise.all(
       users.map(async (user) => {
         const member = await guild.members.fetch(user.id);
-        const displayName = member.user.globalName;
         const { hours, minutes, seconds } = getTimeFromMs(user.cumulative);
+        const formattedTime = formatTime(hours, minutes, seconds);
+        const profilePicture = member.user.displayAvatarURL({ size: 64, extension: "png" });
 
         return {
-          displayName,
-          hours,
-          minutes,
-          seconds,
+          id: user.id,
+          formattedTime,
+          profilePicture,
         };
       }),
     );
 
-    const description = topUsers
-      .map(user => {
-        const formattedTime = formatTime(user.hours, user.minutes, user.seconds);
-
-        return `**${user.displayName}** — \`${formattedTime}\``;
-      })
-      .join("\n");
+    const RTL = "\u061C";
 
     const embed = new EmbedBuilder()
-      .setTitle(`Voice Activity Leaderboard - ${new Date().toLocaleDateString()}`)
-      .setDescription(`${description || "No data available."}`)
-      .setColor(0x000000);
+      .setColor(0x000000)
+      .addFields(
+        {
+          name: `${RTL}الوقت`,
+          value: ``,
+          inline: true
+        },
+        {
+          name: `${RTL}المستخدم`,
+          value: ``,
+          inline: true
+        },
+        {
+          name: `${RTL}المركز`,
+          value: ``,
+          inline: true
+        },
+      );
+
+    for (const user of topUsers) {
+      const index = topUsers.indexOf(user);
+
+      embed.addFields(
+        {
+          name: ``,
+          value: `${RTL}\`${user.formattedTime}\``,
+          inline: true
+        },
+        {
+          name: ``,
+          value: `${RTL}<@${user.id}>`,
+          inline: true
+        },
+        {
+          name: ``,
+          value: `${RTL}**#${index + 1}**`,
+          inline: true
+        },
+      );
+    }
 
     await channel.send({ embeds: [embed] });
 

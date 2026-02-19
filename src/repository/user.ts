@@ -42,8 +42,7 @@ export default class UserRepository {
   }
 
   async getTopUsers(limit: number): Promise<User[]> {
-    const topUsers = [...users]
-      .filter((user) => user.cumulative > 0)
+    const topUsers = [...users.filter((user) => user.cumulative > 0)]
       .sort((a, b) => b.cumulative - a.cumulative)
       .slice(0, limit)
       .map((user) => new User(user));
