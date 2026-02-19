@@ -41,6 +41,16 @@ export default class UserRepository {
     }
   }
 
+  async getAllUsers({hasJoinedTimestamp = false}: {hasJoinedTimestamp?: boolean}): Promise<User[]> {
+    let allUsers = [...users];
+
+    if (hasJoinedTimestamp) {
+      allUsers = allUsers.filter((user) => user.lastJoinedAt !== -1);
+    }
+
+    return allUsers.map((user) => new User(user));
+  }
+
   async getTopUsers(limit: number): Promise<User[]> {
     const topUsers = [...users.filter((user) => user.cumulative > 0)]
       .sort((a, b) => b.cumulative - a.cumulative)

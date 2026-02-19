@@ -22,7 +22,7 @@ export default class User {
     const currentTimestamp = Date.now();
     const difference = currentTimestamp - this.lastJoinedAt;
 
-    this.cumulative = difference;
+    this.cumulative += difference;
     this.lastJoinedAt = -1;
   }
 
