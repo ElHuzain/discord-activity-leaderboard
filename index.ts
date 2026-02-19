@@ -6,10 +6,10 @@ import {
   LOG_CHANNEL_ID,
   TOKEN,
 } from "./src/lib/env.js";
-import VoiceStateHandler from "./src/model/voiceStateHandler.js";
 import { init as InitializeDatabase } from "./src/repository/abstractStorage.js";
 import UserRepository from "./src/repository/user.js";
-import Announcement from "./src/model/announcement.js";
+import Announcement from "./src/service/announcement.js";
+import UserService from "./src/service/user.js";
 
 if (
   ANNOUNCEMENT_CHANNEL_ID === "" ||
@@ -33,18 +33,16 @@ const client = new Client({
 });
 
 const userRepository = new UserRepository();
-
-const voiceStateHandler = new VoiceStateHandler(userRepository);
-
-const announcement = new Announcement(client, userRepository);
+const userService = new UserService(userRepository);
+const announcement = new Announcement(client, userRepository, userService);
 
 await InitializeDatabase();
 await announcement.init();
 
 client.on(Events.ClientReady, async () => {
-  await voiceStateHandler.syncUsers(client);
+  await userService.syncUsers(client);
 });
 
-client.on(Events.VoiceStateUpdate, (oldState, newState) => voiceStateHandler.handleVoiceStateUpdate(oldState, newState));
+client.on(Events.VoiceStateUpdate, (oldState, newState) => userService.handleVoiceStateUpdate(oldState, newState));
 
 client.login(TOKEN);

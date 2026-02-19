@@ -17,17 +17,4 @@ export default class User {
     this.cumulative = cumulative;
     this.totalCumulative = totalCumulative;
   }
-
-  calculate(): void {
-    const currentTimestamp = Date.now();
-    const difference = currentTimestamp - this.lastJoinedAt;
-
-    this.cumulative += difference;
-    this.lastJoinedAt = -1;
-  }
-
-  reset(): void {
-    this.totalCumulative += this.cumulative;
-    this.cumulative = 0;
-  }
 }

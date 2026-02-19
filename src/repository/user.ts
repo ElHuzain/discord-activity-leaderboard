@@ -41,11 +41,15 @@ export default class UserRepository {
     }
   }
 
-  async getAllUsers({hasJoinedTimestamp = false}: {hasJoinedTimestamp?: boolean}): Promise<User[]> {
+  async getAllUsers({hasJoinedTimestamp = false, hasCumulative = false}: {hasJoinedTimestamp?: boolean, hasCumulative?: boolean}): Promise<User[]> {
     let allUsers = [...users];
 
     if (hasJoinedTimestamp) {
       allUsers = allUsers.filter((user) => user.lastJoinedAt !== -1);
+    }
+
+    if (hasCumulative) {
+      allUsers = allUsers.filter((user) => user.cumulative > 0);
     }
 
     return allUsers.map((user) => new User(user));
@@ -58,24 +62,5 @@ export default class UserRepository {
       .map((user) => new User(user));
 
     return topUsers;
-  }
-
-  async resetAllUsers(): Promise<void> {
-    const newUserArray = users.map((user) => {
-      const u = new User({
-        id: user.id,
-        lastJoinedAt: user.lastJoinedAt,
-        cumulative: user.cumulative,
-        totalCumulative: user.totalCumulative,
-      });
-
-      u.reset();
-
-      return u;
-    });
-
-    users.splice(0, users.length, ...newUserArray);
-
-    setUpdated(true);
   }
 }

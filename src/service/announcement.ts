@@ -3,15 +3,18 @@ import { ANNOUNCEMENT_CHANNEL_ID, DAILY_MESSAGE_SEND_HOUR, GUILD_ID } from "../l
 import UserRepository from "../repository/user";
 import { getTimeFromMs } from "../lib/helper";
 import { formatTime } from "../lib/helper";
+import UserService from "./user";
 
 class Announcement {
     lastSentDay: null | number = null;
     client: Client;
     UserRepository: UserRepository;
+    UserService: UserService;
 
-    constructor(client: Client, UserRepository: UserRepository) {
+    constructor(client: Client, UserRepository: UserRepository, UserService: UserService) {
         this.client = client;
         this.UserRepository = UserRepository;
+        this.UserService = UserService;
     }
 
     async postDailyAnnouncement() {
@@ -91,7 +94,7 @@ class Announcement {
 
             await channel.send({ embeds: [embed] });
 
-            await this.UserRepository.resetAllUsers();
+            await this.UserService.resetAllUsers();
         } catch (error) {
             console.error("Error sending daily announcement message:", error);
         }
