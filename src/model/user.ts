@@ -1,10 +1,3 @@
-export type UserDTO = {
-  id: string;
-  lastJoinedAt: number;
-  cumulative: number;
-  totalCumulative: number;
-};
-
 export default class User {
   readonly id: string;
   lastJoinedAt: number;

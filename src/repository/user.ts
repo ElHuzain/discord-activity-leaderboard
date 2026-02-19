@@ -1,10 +1,10 @@
-import User, { UserDTO } from "../model/user";
+import User from "../model/user";
 import { users, setUpdated } from "./abstractStorage";
 
 export default class UserRepository {
   constructor() {}
 
-  async save(user: User | UserDTO): Promise<void> {
+  async save(user: User): Promise<void> {
     const foundUser = users.find((u) => u.id === user.id);
 
     if (foundUser) {
