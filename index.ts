@@ -8,7 +8,8 @@ import {
 } from "./src/lib/env.js";
 import VoiceStateHandler from "./src/model/voiceStateHandler.js";
 import { init as InitializeDatabase } from "./src/repository/abstractStorage.js";
-import { init as InitDailyMessage } from "./src/dailyMessage.js";
+import UserRepository from "./src/repository/user.js";
+import Announcement from "./src/model/announcement.js";
 
 if (
   ANNOUNCEMENT_CHANNEL_ID === "" ||
@@ -31,10 +32,14 @@ const client = new Client({
   ],
 });
 
-const voiceStateHandler = new VoiceStateHandler();
+const userRepository = new UserRepository();
+
+const voiceStateHandler = new VoiceStateHandler(userRepository);
+
+const announcement = new Announcement(client, userRepository);
 
 await InitializeDatabase();
-await InitDailyMessage(client);
+await announcement.init();
 
 client.on(Events.ClientReady, async () => {
   await voiceStateHandler.syncUsers(client);

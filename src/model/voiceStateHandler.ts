@@ -5,11 +5,14 @@ import { IGNORED_VOICE_CHANNEL_IDS } from "../lib/env";
 import { BaseGuildVoiceChannel, ChannelType, Client, GuildMember } from "discord.js";
 
 class VoiceStateHandler {
-  constructor() { }
+  private UserRepository: UserRepository;
+
+  constructor(UserRepository: UserRepository) {
+    this.UserRepository = UserRepository;
+  }
 
   async syncUsers(client: Client) {
-    const repository = new UserRepository();
-    const registeredUsers = await repository.getAllUsers({ hasJoinedTimestamp: true });
+    const registeredUsers = await this.UserRepository.getAllUsers({ hasJoinedTimestamp: true });
 
     const guild = await client.guilds.fetch(GUILD_ID!);
 
@@ -27,7 +30,7 @@ class VoiceStateHandler {
             id: member.id,
             lastJoinedAt: Date.now(),
           });
-          repository.save(user);
+          this.UserRepository.save(user);
         } else {
           userIdsInChannels.push(member.user.id);
         }
@@ -40,7 +43,7 @@ class VoiceStateHandler {
       if (notInChannels) {
         user.calculate();
 
-        repository.save(user);
+        this.UserRepository.save(user);
       }
     });
   }
@@ -70,9 +73,7 @@ class VoiceStateHandler {
 
   async handleUserJoin(state) {
     const userId = state.member.user.id;
-    const Repository = new UserRepository();
-
-    const repoUser = await Repository.getById(userId);
+    const repoUser = await this.UserRepository.getById(userId);
 
     if (!repoUser) {
       const currentTimestamp = Date.now();
@@ -81,7 +82,7 @@ class VoiceStateHandler {
         lastJoinedAt: currentTimestamp,
       });
 
-      Repository.save(newUser);
+      this.UserRepository.save(newUser);
 
       return;
     }
@@ -90,7 +91,7 @@ class VoiceStateHandler {
 
     if (user.lastJoinedAt !== -1) {
       user.calculate();
-      Repository.save(user);
+      this.UserRepository.save(user);
 
       return;
     }
@@ -98,14 +99,12 @@ class VoiceStateHandler {
     const currentTimestamp = Date.now();
 
     user.lastJoinedAt = currentTimestamp;
-    Repository.save(user);
+    this.UserRepository.save(user);
   }
 
   async handleUserLeave(state) {
     const userId = state.member.user.id;
-    const Repository = new UserRepository();
-
-    const repoUser = await Repository.getById(userId);
+    const repoUser = await this.UserRepository.getById(userId);
 
     if (!repoUser) {
       return;
@@ -118,14 +117,13 @@ class VoiceStateHandler {
     }
 
     user.calculate();
-    Repository.save(user);
+    this.UserRepository.save(user);
   }
 
   async handleUserMove(state) {
     const userId = state.member.user.id;
-    const Repository = new UserRepository();
+    const repoUser = await this.UserRepository.getById(userId);
 
-    const repoUser = await Repository.getById(userId);
 
     if (!repoUser) {
       const currentTimestamp = Date.now();
@@ -134,7 +132,7 @@ class VoiceStateHandler {
         lastJoinedAt: currentTimestamp,
       });
 
-      Repository.save(newUser);
+      this.UserRepository.save(newUser);
 
       return;
     }
@@ -145,7 +143,7 @@ class VoiceStateHandler {
       const currentTimestamp = Date.now();
       user.lastJoinedAt = currentTimestamp;
 
-      Repository.save(user);
+      this.UserRepository.save(user);
 
       return;
     }
