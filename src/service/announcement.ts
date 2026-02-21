@@ -30,8 +30,8 @@ class Announcement {
                 return;
             }
 
+            await this.UserService.calculateAllUsersAndSetTimestamp();
             const users = await this.UserRepository.getTopUsers(5);
-
 
             const topUsers = await Promise.all(
                 users.map(async (user) => {

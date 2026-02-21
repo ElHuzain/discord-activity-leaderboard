@@ -11,6 +11,20 @@ class UserService {
         this.UserRepository = UserRepository;
     }
 
+    /**
+     * Syncs user data
+     * 
+     * Gets users with joinedTimestamp from database
+     * and gets all users within voice channels
+     * 
+     * If a user has joinedTimestamp and is not in a voice channel
+     * they will be calculated and saved
+     * 
+     * If a user is in a voice channel and does not have join timestamp
+     * they will have a join timestamp and saved
+     * 
+     * @param client 
+     */
     async syncUsers(client: Client) {
         const registeredUsers = await this.UserRepository.getAllUsers({ hasJoinedTimestamp: true });
 
@@ -158,13 +172,22 @@ class UserService {
         }
     }
 
-
-    calculate(user: UserModel): void {
+    calculate(user: UserModel, updateTimestamp = false): void {
         const currentTimestamp = Date.now();
         const difference = currentTimestamp - user.lastJoinedAt;
 
         user.cumulative += difference;
-        user.lastJoinedAt = -1;
+        user.lastJoinedAt = updateTimestamp ? currentTimestamp : -1;
+    }
+
+    async calculateAllUsersAndSetTimestamp(): Promise<void> {
+        const users = await this.UserRepository.getAllUsers({ hasJoinedTimestamp: true });
+
+        users.forEach(user => {
+            this.calculate(user, true);
+
+            this.UserRepository.save(user);
+        });
     }
 
     reset(user: UserModel): void {
