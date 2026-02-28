@@ -2,12 +2,20 @@ import * as userStore from "../store/user";
 import * as voiceTime from "../domain/voiceTime";
 import { postLeaderboard } from "../discord/api";
 import { getTimeFromMs, formatTime } from "../lib/helper";
+import * as useCase from "../usecase/levelUp";
+import { ResultKind } from "../shared/enums";
 
 export async function postDailyAnnouncement(): Promise<void> {
   try {
     const activeUsers = userStore.getActiveUsers();
     for (const user of activeUsers) {
-      userStore.save(voiceTime.accumulateSession(user, true));
+      const result = voiceTime.accumulateSession(user, true);
+
+      if (result.kind === ResultKind.LEVEL_UP) {
+        await useCase.levelUp(result);
+      }
+
+      userStore.save(result.user);
     }
 
     const topUsers = userStore.getTopUsers(5).map((user) => {

@@ -1,12 +1,16 @@
 import { getMaxLevel } from "../lib/config";
 import { XPDataType } from "../shared/enums";
 
-export function addXp(xp: number, value: number, data: XPDataType): number {
+export function addXp(
+  currentXp: number,
+  value: number,
+  data: XPDataType,
+): number {
   switch (data) {
     case "voice":
-      return xp + value / (1000 * 60);
+      return currentXp + value / (1000 * 60);
     case "message":
-      return xp + value;
+      return currentXp + value;
     default:
       throw new Error(`Invalid data type: ${data}`);
   }

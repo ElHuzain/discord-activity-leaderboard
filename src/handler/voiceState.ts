@@ -1,10 +1,12 @@
-import type { VoiceState } from "discord.js";
+import { type VoiceState } from "discord.js";
 import { GUILD_ID, IGNORED_VOICE_CHANNEL_IDS } from "../lib/config";
 import * as userStore from "../store/user";
 import * as voiceTime from "../domain/voiceTime";
 import { getAllVoiceChannelUserIds } from "../discord/api";
 import { isActive } from "../domain/voiceTime";
 import * as user from "../domain/user";
+import { ResultKind } from "../shared/enums";
+import * as useCase from "../usecase/levelUp";
 
 function isValidVoiceState(state: VoiceState): boolean {
   return (
@@ -14,7 +16,7 @@ function isValidVoiceState(state: VoiceState): boolean {
   );
 }
 
-function handleJoin(userId: string): void {
+async function handleJoin(userId: string): Promise<void> {
   const existing = userStore.getById(userId);
 
   if (!existing) {
@@ -23,8 +25,13 @@ function handleJoin(userId: string): void {
   }
 
   if (isActive(existing)) {
-    const accumulated = voiceTime.accumulateSession(existing);
-    userStore.save(voiceTime.stampJoin(accumulated));
+    const result = voiceTime.accumulateSession(existing);
+
+    userStore.save(voiceTime.stampJoin(result.user));
+
+    if (result.kind === ResultKind.LEVEL_UP) {
+      await useCase.levelUp(result);
+    }
 
     return;
   }
@@ -32,11 +39,17 @@ function handleJoin(userId: string): void {
   userStore.save(voiceTime.stampJoin(existing));
 }
 
-function handleLeave(userId: string): void {
+async function handleLeave(userId: string): Promise<void> {
   const existing = userStore.getById(userId);
   if (!existing || !isActive(existing)) return;
 
-  userStore.save(voiceTime.accumulateSession(existing));
+  const result = voiceTime.accumulateSession(existing);
+
+  userStore.save(result.user);
+
+  if (result.kind === ResultKind.LEVEL_UP) {
+    await useCase.levelUp(result);
+  }
 }
 
 function handleMove(userId: string): void {
@@ -52,10 +65,10 @@ function handleMove(userId: string): void {
   }
 }
 
-export function handleVoiceStateUpdate(
+export async function handleVoiceStateUpdate(
   oldState: VoiceState,
   newState: VoiceState,
-): void {
+): Promise<void> {
   const wasInChannel = isValidVoiceState(oldState);
   const isInChannel = isValidVoiceState(newState);
 
@@ -87,7 +100,13 @@ export async function syncUsers(): Promise<void> {
 
   for (const user of activeUsers) {
     if (!voiceChannelUserIds.includes(user.id)) {
-      userStore.save(voiceTime.accumulateSession(user));
+      const result = voiceTime.accumulateSession(user);
+
+      userStore.save(result.user);
+
+      if (result.kind === ResultKind.LEVEL_UP) {
+        await useCase.levelUp(result);
+      }
     }
   }
 }
