@@ -112,7 +112,7 @@ export async function postLevelUpMessage(userId: string, newLevel: number) {
   }
 
   try {
-    await member.send(
+    await channel.send(
       `Congratulations, <@${member.id}>! You've reached level ${newLevel}!`,
     );
   } catch (error) {
