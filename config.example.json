@@ -1,0 +1,13 @@
+{
+  "roleLevelIds": [],
+  "ignored_channel_ids": {
+    "text": [],
+    "voice": []
+  },
+  "guild_id": "",
+  "announcement_channel_ids": {
+    "level_up": "",
+    "leaderboard": ""
+  },
+  "daily_message_send_hour": 13
+}

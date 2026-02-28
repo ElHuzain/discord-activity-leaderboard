@@ -13,9 +13,14 @@ A Discord bot made with Discord.js. It tracks how long users spend in voice chan
 
 1. Clone the repository `git clone git@github.com:ElHuzain/discord-voice-leaderboard.git`
 2. Run `npm install`
-3. Create `.env` with your environment variables:
+3. Create `.env` and `config.json`
+```bash
+cp config.json.example config.json
+cp .env.example .env
+```
+4. Update `.env` with your environment variables:
     - `DISCORD_TOKEN` - Your Discord bot token
-4. Update `config.json` with your configurations:
+5. Update `config.json` with your configurations:
     - `roleLevelIds` - Array of role IDs corresponding to each level (First role is first level, second role is second level, etc.)
     - `ignored_channel_ids.text` - Array of text channels to ignore text activity (e.g, spam channels
     - `ignored_channel_ids.voice` - Array of voice channels to ignore voice activity (E.g, afk channels)
@@ -23,7 +28,7 @@ A Discord bot made with Discord.js. It tracks how long users spend in voice chan
     - `anouncement_channel_ids.level_up` - The ID of the channel where level up messages will be sent
     - `announcement_channel_ids.leaderboard` - The ID of the channel where daily leaderboard messages will be sent
     - `daily_message_send_hour` - Hour of the day to send daily leaderboard announcement. Use 24 hour format
-5. Start the bot with `npm run start`
+6. Start the bot with `npm run start`
 
 Example `config.json`
 ```json
@@ -49,7 +54,6 @@ Example `config.json`
   },
   "daily_message_send_hour": 13
 }
-
 ```
 
 ## How It Works
