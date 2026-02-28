@@ -1,13 +1,13 @@
 import { ResultKind, XPDataType } from "../shared/enums";
-import * as userModule from "./user";
+import * as xp from "./xp";
 
 export function increment(user: User): Result {
   user.message.count++;
-  user.xp = userModule.addXp(user.xp, 1, XPDataType.MESSAGE);
+  user.xp = xp.addXp(user.xp, 1, XPDataType.MESSAGE);
   const oldLevel = user.level;
 
-  if (userModule.canLevelUp(user)) {
-    const newUser = userModule.levelUp(user);
+  if (xp.canLevelUp(user)) {
+    const newUser = xp.levelUp(user);
 
     return {
       kind: ResultKind.LEVEL_UP,
