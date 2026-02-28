@@ -20,20 +20,20 @@ export function getById(userId: string): User | null {
 
 export function getActiveUsers(): User[] {
   return getStore()
-    .filter((u) => u.lastJoinedAt !== -1)
+    .filter((u) => u.voice.lastJoinedAt !== -1)
     .map((u) => ({ ...u }));
 }
 
 export function getUsersWithCumulative(): User[] {
   return getStore()
-    .filter((u) => u.cumulative > 0)
+    .filter((u) => u.voice.cumulative > 0)
     .map((u) => ({ ...u }));
 }
 
 export function getTopUsers(limit: number): User[] {
   return [...getStore()]
-    .filter((u) => u.cumulative > 0)
-    .sort((a, b) => b.cumulative - a.cumulative)
+    .filter((u) => u.voice.cumulative > 0)
+    .sort((a, b) => b.voice.cumulative - a.voice.cumulative)
     .slice(0, limit)
     .map((u) => ({ ...u }));
 }

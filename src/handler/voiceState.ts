@@ -4,6 +4,7 @@ import * as userStore from "../store/user";
 import * as voiceTime from "../domain/voiceTime";
 import { getAllVoiceChannelUserIds } from "../discord/api";
 import { isActive } from "../domain/voiceTime";
+import * as user from "../domain/user";
 
 function isValidVoiceState(state: VoiceState): boolean {
   return (
@@ -17,7 +18,7 @@ function handleJoin(userId: string): void {
   const existing = userStore.getById(userId);
 
   if (!existing) {
-    userStore.save(voiceTime.createUser(userId));
+    userStore.save(user.create(userId, { stamp: true }));
     return;
   }
 
@@ -42,7 +43,7 @@ function handleMove(userId: string): void {
   const existing = userStore.getById(userId);
 
   if (!existing) {
-    userStore.save(voiceTime.createUser(userId));
+    userStore.save(user.create(userId, { stamp: true }));
     return;
   }
 
@@ -80,7 +81,7 @@ export async function syncUsers(): Promise<void> {
     if (existing) {
       userStore.save(voiceTime.stampJoin(existing));
     } else {
-      userStore.save(voiceTime.createUser(userId));
+      userStore.save(user.create(userId, { stamp: true }));
     }
   }
 

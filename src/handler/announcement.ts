@@ -11,12 +11,16 @@ export async function postDailyAnnouncement(): Promise<void> {
     }
 
     const topUsers = userStore.getTopUsers(5).map((user) => {
-      const { hours, minutes, seconds } = getTimeFromMs(user.cumulative);
+      const { hours, minutes, seconds } = getTimeFromMs(user.voice.cumulative);
       return {
         id: user.id,
         formattedTime: formatTime(hours, minutes, seconds),
       };
     });
+
+    if (topUsers.length === 0) {
+      return;
+    }
 
     await postLeaderboard(topUsers);
 

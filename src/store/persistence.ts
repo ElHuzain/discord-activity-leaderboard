@@ -17,7 +17,7 @@ export function init(): void {
     if (!isDirty) return;
     fs.writeFile(FILE_PATH, JSON.stringify(data), () => {});
     isDirty = false;
-  }, 30_000);
+  }, 500);
 }
 
 export function getStore(): User[] {

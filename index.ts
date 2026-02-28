@@ -3,6 +3,7 @@ import {
   ANNOUNCEMENT_CHANNEL_ID,
   DAILY_MESSAGE_SEND_HOUR,
   GUILD_ID,
+  IGNORED_TEXT_CHANNEL_IDS,
   LOG_CHANNEL_ID,
   TOKEN,
 } from "./src/lib/env.js";
@@ -10,6 +11,7 @@ import { init as initStore } from "./src/store/persistence.js";
 import { client } from "./src/discord/client.js";
 import { handleVoiceStateUpdate, syncUsers } from "./src/handler/voiceState.js";
 import { postDailyAnnouncement } from "./src/handler/announcement.js";
+import { handleMessageCreate } from "./src/handler/messageCreate.js";
 
 if (
   ANNOUNCEMENT_CHANNEL_ID === "" ||
@@ -46,5 +48,7 @@ client.on(Events.ClientReady, async () => {
 });
 
 client.on(Events.VoiceStateUpdate, handleVoiceStateUpdate);
+
+client.on(Events.MessageCreate, handleMessageCreate);
 
 client.login(TOKEN);

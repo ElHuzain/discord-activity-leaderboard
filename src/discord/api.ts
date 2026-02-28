@@ -1,4 +1,5 @@
 import {
+  APIApplicationCommandPermissionsConstant,
   ChannelType,
   EmbedBuilder,
   type BaseGuildVoiceChannel,
@@ -10,6 +11,7 @@ import {
   GUILD_ID,
   IGNORED_VOICE_CHANNEL_IDS,
 } from "../lib/env";
+import * as DiscordHelper from "./helper";
 
 export async function getAllVoiceChannelUserIds(): Promise<string[]> {
   const guild = await client.guilds.fetch(GUILD_ID!);
@@ -70,4 +72,50 @@ export async function postLeaderboard(topUsers: TopUser[]): Promise<void> {
   });
 
   await channel.send({ embeds: [embed] });
+}
+
+/**
+ * Updates user roles based on level changes
+ */
+export async function userLevelUp(
+  userId: string,
+  oldLevelRoleId: string | null,
+  newLevelRoleId: string,
+): Promise<void> {
+  const member = await DiscordHelper.getMember(userId);
+
+  if (!member) {
+    return;
+  }
+
+  try {
+    if (
+      oldLevelRoleId &&
+      oldLevelRoleId !== newLevelRoleId &&
+      member.roles.cache.has(oldLevelRoleId)
+    ) {
+      await member.roles.remove(oldLevelRoleId);
+    }
+
+    await member.roles.add(newLevelRoleId);
+  } catch (error) {
+    console.error("Could not update user roles:", error);
+  }
+}
+
+export async function postLevelUpMessage(userId: string, newLevel: number) {
+  const member = await DiscordHelper.getMember(userId);
+  const channel = await DiscordHelper.getAnnouncementChannel();
+
+  if (!member || !channel) {
+    return;
+  }
+
+  try {
+    await member.send(
+      `Congratulations, <@${member.id}>! You've reached level ${newLevel}!`,
+    );
+  } catch (error) {
+    console.error("Could not send level up message:", error);
+  }
 }
