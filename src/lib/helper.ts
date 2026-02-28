@@ -1,5 +1,4 @@
 const getTimeFromMs = (ms: number) => {
-
   const totalSeconds = Math.floor(ms / 1000);
 
   const hours = Math.floor(totalSeconds / 3600);
