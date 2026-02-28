@@ -30,32 +30,6 @@ cp .env.example .env
     - `daily_message_send_hour` - Hour of the day to send daily leaderboard announcement. Use 24 hour format
 6. Start the bot with `npm run start`
 
-Example `config.json`
-```json
-{
-  "roleLevelIds": [
-    "1477063790766985329",
-    "1477063853354516490",
-    "1477063892130599014",
-    "1477063917074387087"
-  ],
-  "ignored_channel_ids": {
-    "text": ["1476902140780875816", "1476903521269059725"],
-    "voice": [
-      "1472678368712458462",
-      "1472678276630839306",
-      "1315744963807412376"
-    ]
-  },
-  "guild_id": "1001655098386170047",
-  "announcement_channel_ids": {
-    "level_up": "1416634243848605706",
-    "leaderboard": "1477066562979631259"
-  },
-  "daily_message_send_hour": 13
-}
-```
-
 ## How It Works
 
 The bot listens to `voiceStateUpdate` and `messageCreate` events.
