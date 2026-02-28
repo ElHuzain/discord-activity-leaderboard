@@ -1,13 +1,6 @@
-import {
-  BaseChannel,
-  Guild,
-  GuildMember,
-  NewsChannel,
-  TextChannel,
-  VoiceChannel,
-} from "discord.js";
+import { Guild, GuildMember, TextChannel } from "discord.js";
 import { client } from "./client";
-import { ANNOUNCEMENT_CHANNEL_ID, GUILD_ID } from "../lib/env";
+import { ANNOUNCEMENT_LEVEL_UP_CHANNEL_ID, GUILD_ID } from "../lib/config";
 
 export async function getGuild(): Promise<Guild> {
   try {
@@ -42,8 +35,8 @@ export async function getAnnouncementChannel(): Promise<TextChannel | null> {
 
   try {
     const channel =
-      guild.channels.cache.get(ANNOUNCEMENT_CHANNEL_ID!) ??
-      (await guild.channels.fetch(ANNOUNCEMENT_CHANNEL_ID!));
+      guild.channels.cache.get(ANNOUNCEMENT_LEVEL_UP_CHANNEL_ID!) ??
+      (await guild.channels.fetch(ANNOUNCEMENT_LEVEL_UP_CHANNEL_ID!));
 
     if (!(channel instanceof TextChannel)) {
       throw new Error("Channel is not a text channel");

@@ -7,10 +7,10 @@ import {
 } from "discord.js";
 import { client } from "./client";
 import {
-  ANNOUNCEMENT_CHANNEL_ID,
+  ANNOUNCEMENT_LEADERBOARD_CHANNEL_ID,
   GUILD_ID,
   IGNORED_VOICE_CHANNEL_IDS,
-} from "../lib/env";
+} from "../lib/config";
 import * as DiscordHelper from "./helper";
 
 export async function getAllVoiceChannelUserIds(): Promise<string[]> {
@@ -44,7 +44,9 @@ export async function postLeaderboard(topUsers: TopUser[]): Promise<void> {
   const guild = await client.guilds.fetch(GUILD_ID!);
   if (!guild) throw new Error("Guild not found");
 
-  const channel = await guild.channels.fetch(ANNOUNCEMENT_CHANNEL_ID!);
+  const channel = await guild.channels.fetch(
+    ANNOUNCEMENT_LEADERBOARD_CHANNEL_ID!,
+  );
   if (!channel || !channel.isTextBased()) {
     throw new Error("Announcement channel is not a text channel");
   }

@@ -12,7 +12,7 @@ import {
   VoiceChannel,
   User as DiscordUser,
 } from "discord.js";
-import { GUILD_ID, IGNORED_TEXT_CHANNEL_IDS } from "../lib/env";
+import { GUILD_ID, IGNORED_TEXT_CHANNEL_IDS } from "../lib/config";
 import * as userStore from "../store/user";
 import * as user from "../domain/user";
 import * as messageCount from "../domain/messageCount";

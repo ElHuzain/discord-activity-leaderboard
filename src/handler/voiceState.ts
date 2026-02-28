@@ -1,5 +1,5 @@
 import type { VoiceState } from "discord.js";
-import { GUILD_ID, IGNORED_VOICE_CHANNEL_IDS } from "../lib/env";
+import { GUILD_ID, IGNORED_VOICE_CHANNEL_IDS } from "../lib/config";
 import * as userStore from "../store/user";
 import * as voiceTime from "../domain/voiceTime";
 import { getAllVoiceChannelUserIds } from "../discord/api";

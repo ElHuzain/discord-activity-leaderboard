@@ -1,29 +1,16 @@
 import Discord from "discord.js";
-import {
-  ANNOUNCEMENT_CHANNEL_ID,
-  DAILY_MESSAGE_SEND_HOUR,
-  GUILD_ID,
-  IGNORED_TEXT_CHANNEL_IDS,
-  LOG_CHANNEL_ID,
-  TOKEN,
-} from "./src/lib/env.js";
+import { DAILY_MESSAGE_SEND_HOUR, isValidConfig } from "./src/lib/config.js";
 import { init as initStore } from "./src/store/persistence.js";
 import { client } from "./src/discord/client.js";
 import { handleVoiceStateUpdate, syncUsers } from "./src/handler/voiceState.js";
 import { postDailyAnnouncement } from "./src/handler/announcement.js";
 import { handleMessageCreate } from "./src/handler/messageCreate.js";
+import { TOKEN } from "./src/lib/env.js";
 
-if (
-  ANNOUNCEMENT_CHANNEL_ID === "" ||
-  TOKEN === "" ||
-  LOG_CHANNEL_ID === "" ||
-  GUILD_ID === "" ||
-  DAILY_MESSAGE_SEND_HOUR === undefined
-) {
-  throw new Error(
-    "Environment variables are not set!\nPlease refer to README.md for instructions",
+if (!isValidConfig())
+  throw Error(
+    "\n---\nInvalid configurations.\nPlease refer to `README.md` for instructions.\n---\n",
   );
-}
 
 const { Events } = Discord;
 
