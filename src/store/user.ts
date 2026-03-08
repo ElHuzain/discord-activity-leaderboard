@@ -1,39 +1,25 @@
-import { getStore, markDirty } from "./persistence";
+import { getStore, markDirty } from "./persistence/user";
 
 export function save(user: User): void {
   const store = getStore();
-  const index = store.findIndex((u) => u.id === user.id);
 
-  if (index !== -1) {
-    store[index] = { ...user };
-  } else {
-    store.push({ ...user });
-  }
+  store[user.id] = { ...user };
 
   markDirty();
 }
 
 export function getById(userId: string): User | null {
-  const user = getStore().find((u) => u.id === userId);
+  const user = getStore()[userId];
+
   return user ? { ...user } : null;
 }
 
 export function getActiveUsers(): User[] {
-  return getStore()
-    .filter((u) => u.voice.lastJoinedAt !== -1)
-    .map((u) => ({ ...u }));
-}
+  const filtered = Object.values(getStore()).filter(
+    (u) => u.lastJoinedAt !== null,
+  );
 
-export function getUsersWithCumulative(): User[] {
-  return getStore()
-    .filter((u) => u.voice.cumulative > 0)
-    .map((u) => ({ ...u }));
-}
-
-export function getTopUsers(limit: number): User[] {
-  return [...getStore()]
-    .filter((u) => u.voice.cumulative > 0)
-    .sort((a, b) => b.voice.cumulative - a.voice.cumulative)
-    .slice(0, limit)
-    .map((u) => ({ ...u }));
+  return filtered.map((u) => {
+    return { ...u };
+  });
 }
