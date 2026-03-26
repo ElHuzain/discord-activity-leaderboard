@@ -8,7 +8,9 @@ function isValidVoiceState(state: VoiceState): boolean {
   return (
     !!state.channel &&
     !IGNORED_VOICE_CHANNEL_IDS.includes(state.channelId!) &&
-    state.guild.id === GUILD_ID
+    state.guild.id === GUILD_ID &&
+    !!state.member &&
+    !state.member.user.bot
   );
 }
 

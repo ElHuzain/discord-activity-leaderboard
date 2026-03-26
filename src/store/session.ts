@@ -9,29 +9,21 @@ export function save(session: Session): void {
 }
 
 export function getBetween({
-  start,
-  end,
+  start = -Infinity,
+  end = Infinity,
 }: {
   start?: number;
   end?: number;
 }): Session[] {
   const store = getStore();
 
-  if (start && !end) {
-    return store.filter((session) => session.joinedAt <= start);
-  }
-
-  if (!start && end) {
-    return store.filter((session) => end >= session.leftAt);
-  }
-
-  if (start && end) {
-    return store.filter(
-      (session) => end >= session.leftAt && session.joinedAt <= start,
-    );
-  }
-
-  return [];
+  return store
+    .filter((session) => session.joinedAt <= end && session.leftAt >= start)
+    .map((session) => ({
+      ...session,
+      joinedAt: Math.max(start, session.joinedAt),
+      leftAt: Math.min(end, session.leftAt),
+    }));
 }
 
 export function getWeek(): Session[] {

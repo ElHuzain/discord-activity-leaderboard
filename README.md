@@ -55,5 +55,6 @@ Features currently in mind:
 - Slash commands (`/top`, `/weekly`, etc)
 - Weekly / Daily leaderboard announcements
 - Localization - currently its kinda Arabic and kinda English
+- Outage fallback for daily reset
 
 Feel free to contribute! :D

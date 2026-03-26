@@ -1,7 +1,7 @@
 import Discord from "discord.js";
 import { DAILY_MESSAGE_SEND_HOUR, isValidConfig } from "./src/lib/config.js";
 import { init as initUserStore } from "./src/store/persistence/user";
-import { init as initSessionStore } from "./src/store/persistence/user";
+import { init as initSessionStore } from "./src/store/persistence/session";
 import { client } from "./src/discord/client.js";
 import { handleVoiceStateUpdate } from "./src/handler/voiceState.js";
 import { TOKEN } from "./src/lib/env.js";

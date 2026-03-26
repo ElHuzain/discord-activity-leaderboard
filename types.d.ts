@@ -5,6 +5,11 @@ type User = {
   lastJoinedAt: TimestampMs | null;
 };
 
+type TopUser = {
+  id: string;
+  formattedTime: string;
+};
+
 type UserStore = Record<string, User>;
 
 type Session = {

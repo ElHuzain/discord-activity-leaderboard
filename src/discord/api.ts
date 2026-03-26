@@ -29,14 +29,13 @@ export async function getAllVoiceChannelUserIds(): Promise<string[]> {
         member.user.bot
       )
         continue;
+
       userIds.push(member.user.id);
     }
   }
 
   return userIds;
 }
-
-type TopUser = { id: string; formattedTime: string };
 
 export async function postLeaderboard(topUsers: TopUser[]): Promise<void> {
   const guild = await client.guilds.fetch(GUILD_ID!);
