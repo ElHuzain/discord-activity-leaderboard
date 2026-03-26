@@ -8,7 +8,7 @@ export default async function handleTopWeek(interaction: ChatInputCommandInterac
   const range = getWeekRange(Date.now());
   const sessions = sessionStore.getBetween(range);
 
-  const topUsers = prepareTopUsers(sessions);
+  const topUsers = prepareTopUsers(sessions, 10);
 
   await sendTopWeekly(interaction, topUsers);
 }

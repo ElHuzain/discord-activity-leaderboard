@@ -37,7 +37,7 @@ export async function sendDailyAnnouncement() {
     return;
   }
 
-  const topUsers = prepareTopUsers(yesterdaySessions);
+  const topUsers = prepareTopUsers(yesterdaySessions, 5);
 
   await DiscordAdapter.postLeaderboard(topUsers);
 }

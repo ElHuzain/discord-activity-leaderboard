@@ -28,7 +28,7 @@ export function endSession(user: User): { user: User; session: Session } {
   };
 }
 
-export function prepareTopUsers(sessions: Session[]): TopUser[] {
+export function prepareTopUsers(sessions: Session[], limit?: number): TopUser[] {
   const userStats: Record<string, { time: number; sessions: number }> = {};
   for (const session of sessions) {
     if (!userStats[session.userId]) {
@@ -38,7 +38,11 @@ export function prepareTopUsers(sessions: Session[]): TopUser[] {
     userStats[session.userId].sessions += 1;
   }
 
-  const sortedUsers = Object.entries(userStats).sort((a, b) => b[1].time - a[1].time);
+  let sortedUsers = Object.entries(userStats).sort((a, b) => b[1].time - a[1].time);
+
+  if (limit && limit > 0) {
+    sortedUsers = sortedUsers.slice(0, limit);
+  }
 
   return sortedUsers.map(([id, stats]) => {
     const { hours, minutes, seconds } = getTimeFromMs(stats.time);
