@@ -1,11 +1,11 @@
 {
   "ar": {
-    "TOP_WEEKLY_TITLE": "أفضل المتفاعلين صوتياً لهذا الأسبوع",
+    "TOP_WEEKLY_TITLE": "أكثر المتفاعلين صوتياً لهذا الأسبوع",
     "NO_USERS_FOUND": "لا يوجد متفاعلين هذا الأسبوع.",
     "RANK_HEADER": "**المركز #{{rank}}**",
     "USER_LINE": "المستخدم: <@{{userId}}>",
     "TIME_LINE": "الوقت: {{time}}",
-    "SESSIONS_LINE": "الجلسات: {{sessions}}",
+    "SESSIONS_LINE": "عدد السيشنز: {{sessions}}",
     "COLUMN_TIME": "الوقت",
     "COLUMN_USER": "المستخدم",
     "COLUMN_RANK": "المركز",
