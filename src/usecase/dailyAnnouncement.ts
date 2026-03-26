@@ -32,6 +32,10 @@ export async function sendDailyAnnouncement() {
 
   const yesterdaySessions = sessionStore.getBetween(getYesterdayRange());
 
+  if (yesterdaySessions.length === 0) {
+    return;
+  }
+
   const userTimes: Record<string, number> = {};
   for (const session of yesterdaySessions) {
     userTimes[session.userId] = (userTimes[session.userId] || 0) + (session.leftAt - session.joinedAt);
