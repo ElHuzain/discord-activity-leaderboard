@@ -56,7 +56,8 @@ export async function postLeaderboard(topUsers: TopUser[]): Promise<void> {
       { name: `${RTL}الوقت`, value: `\u200b`, inline: true },
       { name: `${RTL}المستخدم`, value: `\u200b`, inline: true },
       { name: `${RTL}المركز`, value: `\u200b`, inline: true },
-    );
+    )
+    .setFooter({ text: "النسخة اللي تحت الاختبار.." });
 
   topUsers.forEach((user, index) => {
     embed.addFields(

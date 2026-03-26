@@ -20,23 +20,6 @@ initSessionStore();
 
 scheduler();
 
-// Code for daily announcement - saving for later
-
-// Let's come back to this later
-// let lastSentDay: number | null = null;
-
-// setInterval(async () => {
-//   const now = new Date();
-//   if (
-//     lastSentDay === now.getDate() ||
-//     now.getHours() !== DAILY_MESSAGE_SEND_HOUR
-//   )
-//     return;
-
-//   lastSentDay = now.getDate();
-//   await postDailyAnnouncement();
-// }, 60_000 * 30);
-
 client.on(Events.ClientReady, async () => {
   await onReady();
 });
