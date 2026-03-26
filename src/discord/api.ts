@@ -4,6 +4,7 @@ import {
   type BaseGuildVoiceChannel,
   type NonThreadGuildBasedChannel,
   ChatInputCommandInteraction,
+  MessageFlags
 } from "discord.js";
 import { client } from "./client";
 import {
@@ -57,7 +58,7 @@ export async function postLeaderboard(topUsers: TopUser[]): Promise<void> {
   if (topUsers.length === 0) {
     embed.setDescription(t("NO_USERS_FOUND"));
   } else {
-    topUsers.slice(0, 10).forEach((user, index) => {
+    topUsers.forEach((user, index) => {
       embed.addFields({
         name: t("RANK_HEADER", { rank: index + 1 }),
         value: `${t("USER_LINE", { userId: user.id })}\n${t("TIME_LINE", { time: user.formattedTime })}\n${t("SESSIONS_LINE", { sessions: user.sessions })}`,
@@ -66,7 +67,11 @@ export async function postLeaderboard(topUsers: TopUser[]): Promise<void> {
     });
   }
 
-  await channel.send({ embeds: [embed] });
+  try {
+    await channel.send({ embeds: [embed] });
+  } catch (err) {
+    console.log("Error trying to send daily message:", err);
+  }
 }
 
 export async function sendTopWeekly(interaction: ChatInputCommandInteraction, topUsers: TopUser[]): Promise<void> {
@@ -86,5 +91,7 @@ export async function sendTopWeekly(interaction: ChatInputCommandInteraction, to
     });
   }
 
-  await interaction.reply({ embeds: [embed] });
+  await interaction.reply({
+    embeds: [embed], flags: MessageFlags.Ephemeral
+  });
 }

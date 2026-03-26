@@ -2,6 +2,7 @@ import * as DiscordAdapter from "../discord/api";
 import { getYesterdayRange } from "../lib/helper";
 import * as sessionStore from "../store/session";
 import { prepareTopUsers } from "../domain/voiceTime";
+import { DAILY_MESSAGE_SEND_HOUR } from "../lib/config";
 
 // Sends an announcement everyday based on specified settings
 // Much like daily reset, will check if already sent etc etc.
@@ -15,7 +16,7 @@ function canSend(): boolean {
   const currentHour = now.getHours();
 
   if (
-    currentHour !== 0 || // Should reset at beginning of day
+    currentHour !== DAILY_MESSAGE_SEND_HOUR || // Should reset at beginning of day
     lastSendDay !== null || // Hasn't reset in the current runtime
     lastSendDay === currentDayOfWeek // Had already reset today (this can run many times an hour)
   ) {
