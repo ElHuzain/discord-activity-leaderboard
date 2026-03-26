@@ -1,15 +1,21 @@
-declare type User = {
+type TimestampMs = number;
+
+type User = {
   id: string;
-  voice: {
-    lastJoinedAt: number;
-    cumulative: number;
-    totalCumulative: number;
-  };
-  message: {
-    count: number;
-  };
-  xp: number;
-  level: number;
+  lastJoinedAt: TimestampMs | null;
+};
+
+type TopUser = {
+  id: string;
+  formattedTime: string;
+};
+
+type UserStore = Record<string, User>;
+
+type Session = {
+  userId: string;
+  joinedAt: TimestampMs;
+  leftAt: TimestampMs;
 };
 
 type Result =

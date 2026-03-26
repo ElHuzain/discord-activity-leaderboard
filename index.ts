@@ -1,11 +1,12 @@
 import Discord from "discord.js";
 import { DAILY_MESSAGE_SEND_HOUR, isValidConfig } from "./src/lib/config.js";
-import { init as initStore } from "./src/store/persistence.js";
+import { init as initUserStore } from "./src/store/persistence/user";
+import { init as initSessionStore } from "./src/store/persistence/session";
 import { client } from "./src/discord/client.js";
-import { handleVoiceStateUpdate, syncUsers } from "./src/handler/voiceState.js";
-import { postDailyAnnouncement } from "./src/handler/announcement.js";
-import { handleMessageCreate } from "./src/handler/messageCreate.js";
+import { handleVoiceStateUpdate } from "./src/handler/voiceState.js";
 import { TOKEN } from "./src/lib/env.js";
+import onReady from "./src/handler/onReady.js";
+import scheduler from "./src/store/persistence/scheduler.js";
 
 if (!isValidConfig())
   throw Error(
@@ -14,28 +15,15 @@ if (!isValidConfig())
 
 const { Events } = Discord;
 
-initStore();
+initUserStore();
+initSessionStore();
 
-let lastSentDay: number | null = null;
-
-setInterval(async () => {
-  const now = new Date();
-  if (
-    lastSentDay === now.getDate() ||
-    now.getHours() !== DAILY_MESSAGE_SEND_HOUR
-  )
-    return;
-
-  lastSentDay = now.getDate();
-  await postDailyAnnouncement();
-}, 60_000 * 30);
+scheduler();
 
 client.on(Events.ClientReady, async () => {
-  await syncUsers();
+  await onReady();
 });
 
 client.on(Events.VoiceStateUpdate, handleVoiceStateUpdate);
-
-client.on(Events.MessageCreate, handleMessageCreate);
 
 client.login(TOKEN);

@@ -140,4 +140,5 @@ vite.config.ts.timestamp-*
 
 # Local storage
 users.json
+sessions.json
 config.json

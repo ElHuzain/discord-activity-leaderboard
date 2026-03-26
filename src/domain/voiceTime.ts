@@ -1,54 +1,27 @@
-import { ResultKind, XPDataType } from "../shared/enums";
-import * as xp from "./xp";
-
-export function stampJoin(user: User): User {
-  return { ...user, voice: { ...user.voice, lastJoinedAt: Date.now() } };
+export function startSession(user: User): User {
+  return { ...user, lastJoinedAt: Date.now() };
 }
 
-export function accumulateSession(
-  user: User,
-  preserveTimestamp = false,
-): Result {
-  const now = Date.now();
-  const duration = now - user.voice.lastJoinedAt;
-  user.xp = xp.addXp(user.xp, duration, XPDataType.VOICE);
-  const oldLevel = user.level;
+export function hasActiveSession(user: User): boolean {
+  return user.lastJoinedAt !== null;
+}
 
-  if (xp.canLevelUp(user)) {
-    const newUser = xp.levelUp(user);
-
-    return {
-      user: newUser,
-      kind: ResultKind.LEVEL_UP,
-      oldLevel,
-      newLevel: newUser.level,
-    };
+export function endSession(user: User): { user: User; session: Session } {
+  if (!hasActiveSession(user)) {
+    throw new Error(
+      "An attempt to create a session for a user without lastJoinedAt",
+    );
   }
 
   return {
-    kind: ResultKind.NO_CHANGE,
     user: {
       ...user,
-      voice: {
-        ...user.voice,
-        cumulative: user.voice.cumulative + duration,
-        lastJoinedAt: preserveTimestamp ? now : -1,
-      },
+      lastJoinedAt: null,
+    },
+    session: {
+      joinedAt: user.lastJoinedAt!,
+      leftAt: Date.now(),
+      userId: user.id,
     },
   };
-}
-
-export function resetDaily(user: User): User {
-  return {
-    ...user,
-    voice: {
-      ...user.voice,
-      totalCumulative: user.voice.totalCumulative + user.voice.cumulative,
-      cumulative: 0,
-    },
-  };
-}
-
-export function isActive(user: User): boolean {
-  return user.voice.lastJoinedAt !== -1;
 }

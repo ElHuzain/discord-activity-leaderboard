@@ -1,6 +1,6 @@
 # Discord activity leaderboard
 
-A Discord bot made with Discord.js. It tracks how long users spend in voice channels and messages they send, stores them. Then, everyday, it sends a leaderboard of top users based on their cumulative time & messages sent.
+A Discord bot made with Discord.js. It tracks how long users spend in voice channels and messages they send, stores them. Then, everyday, it sends a leaderboard of top users based on their cumulative time.
 
 ## Features
 
@@ -22,7 +22,6 @@ cp .env.example .env
     - `DISCORD_TOKEN` - Your Discord bot token
 5. Update `config.json` with your configurations:
     - `roleLevelIds` - Array of role IDs corresponding to each level (First role is first level, second role is second level, etc.)
-    - `ignored_channel_ids.text` - Array of text channels to ignore text activity (e.g, spam channels
     - `ignored_channel_ids.voice` - Array of voice channels to ignore voice activity (E.g, afk channels)
     - `guild_id` - The ID of your server
     - `anouncement_channel_ids.level_up` - The ID of the channel where level up messages will be sent
@@ -32,26 +31,18 @@ cp .env.example .env
 
 ## How It Works
 
-The bot listens to `voiceStateUpdate` and `messageCreate` events.
-
-### Voice Time Tracking
+The bot listens to `voiceStateUpdate` and `onReady` events.
 
 When a user joins a voice channel, a timestamp is stored in memory.  
 When they leave, the duration is calculated and added to their cumulative total.
 
-### Message Tracking
-
-When a user sends a message, simply, increment message count and evaluate xp increase.
-
-### XP Leveling System
-
-Currently, the two main activities (voice channel and message sending) increase your XP, which levels you up when you reach milestones.
-
-This feature is still under development.
+As a fallback to outages, the onReady message will recover as follows:
+- If a user is currently marked as "in a channel", but isn't in channel, they'll be immediately marked as session ended
+- If a user is currently in a channel, but isn't marked as "in a channel", their session will start
 
 ### Storage
 
-Every minute, the bot will attempt to store the current state of users in a JSON file `users.json`. (Only if the data has been updated!)
+Every minute, the bot will attempt to store the current state of users in a JSON file `users.json` and `sessions.json`. (Only if the data has been updated!)
 
 If JSON storage is not sufficient for your case and you'd like to use an actual database system, please update `/src/store.ts`.
 
@@ -60,10 +51,10 @@ If JSON storage is not sufficient for your case and you'd like to use an actual 
 This bot is currently under development, more features to come soon :)
 
 Features currently in mind:
-- Level multiplier configuration
-- Leveling up enhancements (still deciding on whether users can have max level or not)
+- Leveling system
 - Slash commands (`/top`, `/weekly`, etc)
-- Weekly leaderboard announcements
+- Weekly / Daily leaderboard announcements
 - Localization - currently its kinda Arabic and kinda English
+- Outage fallback for daily reset
 
 Feel free to contribute! :D
