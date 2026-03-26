@@ -1,3 +1,24 @@
+import locales from "../../localization.json";
+import { LANGUAGE } from "./config";
+
+type Locale = keyof typeof locales;
+type TranslationKey = keyof typeof locales.en;
+
+export function t(key: TranslationKey, variables: Record<string, string | number> = {}, locale: string = LANGUAGE): string {
+  const dict: Record<string, string> = locales[locale as Locale] || locales.en;
+  let text = String(dict[key] || locales.en[key] || key);
+
+  for (const [vKey, vValue] of Object.entries(variables)) {
+    text = text.replace(new RegExp(`{{${vKey}}}`, "g"), String(vValue));
+  }
+
+  if (locale === "ar") {
+    return `\u061C${text}`;
+  }
+
+  return text;
+}
+
 export function getTimeFromMs(ms: number) {
   const totalSeconds = Math.floor(ms / 1000);
 

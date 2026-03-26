@@ -11,6 +11,7 @@ import {
   GUILD_ID,
   IGNORED_VOICE_CHANNEL_IDS,
 } from "../lib/config";
+import { t } from "../lib/helper";
 
 export async function getAllVoiceChannelUserIds(): Promise<string[]> {
   const guild = await client.guilds.fetch(GUILD_ID!);
@@ -49,28 +50,21 @@ export async function postLeaderboard(topUsers: TopUser[]): Promise<void> {
     throw new Error("Announcement channel is not a text channel");
   }
 
-  const RTL = "\u061C";
-
   const embed = new EmbedBuilder()
     .setColor(0x000000)
-    .addFields(
-      { name: `${RTL}الوقت`, value: `\u200b`, inline: true },
-      { name: `${RTL}المستخدم`, value: `\u200b`, inline: true },
-      { name: `${RTL}المركز`, value: `\u200b`, inline: true },
-    )
-    .setFooter({ text: "النسخة اللي تحت الاختبار.." });
+    .setFooter({ text: t("FOOTER_TEST") });
 
-  topUsers.forEach((user, index) => {
-    embed.addFields(
-      {
-        name: `\u200b`,
-        value: `${RTL}\`${user.formattedTime}\``,
-        inline: true,
-      },
-      { name: `\u200b`, value: `${RTL}<@${user.id}>`, inline: true },
-      { name: `\u200b`, value: `${RTL}**#${index + 1}**`, inline: true },
-    );
-  });
+  if (topUsers.length === 0) {
+    embed.setDescription(t("NO_USERS_FOUND"));
+  } else {
+    topUsers.slice(0, 10).forEach((user, index) => {
+      embed.addFields({
+        name: t("RANK_HEADER", { rank: index + 1 }),
+        value: `${t("USER_LINE", { userId: user.id })}\n${t("TIME_LINE", { time: user.formattedTime })}\n${t("SESSIONS_LINE", { sessions: user.sessions })}`,
+        inline: false,
+      });
+    });
+  }
 
   await channel.send({ embeds: [embed] });
 }
@@ -78,15 +72,15 @@ export async function postLeaderboard(topUsers: TopUser[]): Promise<void> {
 export async function sendTopWeekly(interaction: ChatInputCommandInteraction, topUsers: TopUser[]): Promise<void> {
   const embed = new EmbedBuilder()
     .setColor(0x000000)
-    .setTitle(`Top Weekly Voice Time`)
+    .setTitle(t("TOP_WEEKLY_TITLE", {}))
 
   if (topUsers.length === 0) {
-    embed.setDescription("No users found.");
+    embed.setDescription(t("NO_USERS_FOUND", {}));
   } else {
     topUsers.forEach((user, index) => {
       embed.addFields({
-        name: `**Rank #${index + 1}**`,
-        value: `User: <@${user.id}>\nTime: ${user.formattedTime}\nNumber of Sessions: ${user.sessions}`,
+        name: t("RANK_HEADER", { rank: index + 1 }),
+        value: `${t("USER_LINE", { userId: user.id })}\n${t("TIME_LINE", { time: user.formattedTime })}\n${t("SESSIONS_LINE", { sessions: user.sessions })}`,
         inline: false,
       });
     });

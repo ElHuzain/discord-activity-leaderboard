@@ -1,0 +1,26 @@
+{
+  "ar": {
+    "TOP_WEEKLY_TITLE": "أفضل المتفاعلين صوتياً لهذا الأسبوع",
+    "NO_USERS_FOUND": "لا يوجد متفاعلين هذا الأسبوع.",
+    "RANK_HEADER": "**المركز #{{rank}}**",
+    "USER_LINE": "المستخدم: <@{{userId}}>",
+    "TIME_LINE": "الوقت: {{time}}",
+    "SESSIONS_LINE": "الجلسات: {{sessions}}",
+    "COLUMN_TIME": "الوقت",
+    "COLUMN_USER": "المستخدم",
+    "COLUMN_RANK": "المركز",
+    "FOOTER_TEST": "النسخة اللي تحت الاختبار.."
+  },
+  "en": {
+    "TOP_WEEKLY_TITLE": "Top Weekly Voice Time",
+    "NO_USERS_FOUND": "No users found.",
+    "RANK_HEADER": "**Rank #{{rank}}**",
+    "USER_LINE": "User: <@{{userId}}>",
+    "TIME_LINE": "Time: {{time}}",
+    "SESSIONS_LINE": "Number of Sessions: {{sessions}}",
+    "COLUMN_TIME": "Time",
+    "COLUMN_USER": "User",
+    "COLUMN_RANK": "Rank",
+    "FOOTER_TEST": "Test version.."
+  }
+}

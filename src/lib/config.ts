@@ -6,6 +6,7 @@ const ANNOUNCEMENT_LEADERBOARD_CHANNEL_ID =
   config.announcement_channel_ids.leaderboard;
 const IGNORED_VOICE_CHANNEL_IDS: string[] = config.ignored_channel_ids.voice;
 const DAILY_MESSAGE_SEND_HOUR = config.daily_message_send_hour ?? 10;
+const LANGUAGE = config.language as Language;
 
 const isValidConfig = (): boolean => {
   return (
@@ -13,6 +14,7 @@ const isValidConfig = (): boolean => {
     typeof GUILD_ID === "string" &&
     !!CLIENT_ID &&
     typeof CLIENT_ID === "string" &&
+    (LANGUAGE === "ar" || LANGUAGE === "en") &&
     !!ANNOUNCEMENT_LEADERBOARD_CHANNEL_ID &&
     typeof ANNOUNCEMENT_LEADERBOARD_CHANNEL_ID === "string" &&
     Array.isArray(IGNORED_VOICE_CHANNEL_IDS) &&
@@ -26,5 +28,6 @@ export {
   ANNOUNCEMENT_LEADERBOARD_CHANNEL_ID,
   IGNORED_VOICE_CHANNEL_IDS,
   DAILY_MESSAGE_SEND_HOUR,
+  LANGUAGE,
   isValidConfig,
 };
