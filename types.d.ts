@@ -16,6 +16,7 @@ type Session = {
   userId: string;
   joinedAt: TimestampMs;
   leftAt: TimestampMs;
+  isArchived?: boolean;
 };
 
 type Result =
