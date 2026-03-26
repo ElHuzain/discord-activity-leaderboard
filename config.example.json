@@ -3,6 +3,7 @@
     "voice": []
   },
   "guild_id": "",
+  "client_id": "",
   "announcement_channel_ids": {
     "leaderboard": ""
   },
