@@ -1,6 +1,7 @@
 import * as DiscordAdapter from "../discord/api";
-import { getYesterdayRange, getTimeFromMs, formatTime } from "../lib/helper";
+import { getYesterdayRange } from "../lib/helper";
 import * as sessionStore from "../store/session";
+import { prepareTopUsers } from "../domain/voiceTime";
 
 // Sends an announcement everyday based on specified settings
 // Much like daily reset, will check if already sent etc etc.
@@ -36,20 +37,7 @@ export async function sendDailyAnnouncement() {
     return;
   }
 
-  const userTimes: Record<string, number> = {};
-  for (const session of yesterdaySessions) {
-    userTimes[session.userId] = (userTimes[session.userId] || 0) + (session.leftAt - session.joinedAt);
-  }
-
-  const sortedUsers = Object.entries(userTimes).sort((a, b) => b[1] - a[1]);
-
-  const topUsers: TopUser[] = sortedUsers.map(([id, timeMs]) => {
-    const { hours, minutes, seconds } = getTimeFromMs(timeMs);
-    return {
-      id,
-      formattedTime: formatTime(hours, minutes, seconds),
-    };
-  });
+  const topUsers = prepareTopUsers(yesterdaySessions);
 
   await DiscordAdapter.postLeaderboard(topUsers);
 }

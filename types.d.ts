@@ -8,6 +8,7 @@ type User = {
 type TopUser = {
   id: string;
   formattedTime: string;
+  sessions: number;
 };
 
 type UserStore = Record<string, User>;

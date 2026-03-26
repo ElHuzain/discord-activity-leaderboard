@@ -1,3 +1,5 @@
+import { getTimeFromMs, formatTime } from "../lib/helper";
+
 export function startSession(user: User): User {
   return { ...user, lastJoinedAt: Date.now() };
 }
@@ -24,4 +26,26 @@ export function endSession(user: User): { user: User; session: Session } {
       userId: user.id,
     },
   };
+}
+
+export function prepareTopUsers(sessions: Session[]): TopUser[] {
+  const userStats: Record<string, { time: number; sessions: number }> = {};
+  for (const session of sessions) {
+    if (!userStats[session.userId]) {
+      userStats[session.userId] = { time: 0, sessions: 0 };
+    }
+    userStats[session.userId].time += session.leftAt - session.joinedAt;
+    userStats[session.userId].sessions += 1;
+  }
+
+  const sortedUsers = Object.entries(userStats).sort((a, b) => b[1].time - a[1].time);
+
+  return sortedUsers.map(([id, stats]) => {
+    const { hours, minutes, seconds } = getTimeFromMs(stats.time);
+    return {
+      id,
+      formattedTime: formatTime(hours, minutes, seconds),
+      sessions: stats.sessions,
+    };
+  });
 }

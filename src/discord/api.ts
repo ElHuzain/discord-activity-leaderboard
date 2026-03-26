@@ -3,6 +3,7 @@ import {
   EmbedBuilder,
   type BaseGuildVoiceChannel,
   type NonThreadGuildBasedChannel,
+  ChatInputCommandInteraction,
 } from "discord.js";
 import { client } from "./client";
 import {
@@ -72,4 +73,24 @@ export async function postLeaderboard(topUsers: TopUser[]): Promise<void> {
   });
 
   await channel.send({ embeds: [embed] });
+}
+
+export async function sendTopWeekly(interaction: ChatInputCommandInteraction, topUsers: TopUser[]): Promise<void> {
+  const embed = new EmbedBuilder()
+    .setColor(0x000000)
+    .setTitle(`Top Weekly Voice Time`)
+
+  if (topUsers.length === 0) {
+    embed.setDescription("No users found.");
+  } else {
+    topUsers.forEach((user, index) => {
+      embed.addFields({
+        name: `**Rank #${index + 1}**`,
+        value: `User: <@${user.id}>\nTime: ${user.formattedTime}\nNumber of Sessions: ${user.sessions}`,
+        inline: false,
+      });
+    });
+  }
+
+  await interaction.reply({ embeds: [embed] });
 }
