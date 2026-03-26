@@ -141,4 +141,5 @@ vite.config.ts.timestamp-*
 # Local storage
 users.json
 sessions.json
+sessions-archived.json
 config.json
