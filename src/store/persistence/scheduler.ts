@@ -5,5 +5,5 @@ export default function scheduler() {
   setInterval(() => {
     persistUsers();
     persistSessions();
-  }, 500);
+  }, 30_000);
 }
