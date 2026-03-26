@@ -8,7 +8,7 @@ import { DAILY_MESSAGE_SEND_HOUR } from "../lib/config";
 // Much like daily reset, will check if already sent etc etc.
 // Hm, we have a problem: What if the bot restarts after the announcement has been sent? (same hour)
 
-let lastSendDay: number | null = null;
+let lastSendDay: number = 999;
 
 function canSend(): boolean {
   const now = new Date();
@@ -17,10 +17,9 @@ function canSend(): boolean {
 
   if (
     currentHour !== DAILY_MESSAGE_SEND_HOUR || // Should reset at beginning of day
-    lastSendDay !== null || // Hasn't reset in the current runtime
     lastSendDay === currentDayOfWeek // Had already reset today (this can run many times an hour)
   ) {
-    return true;
+    return false;
   }
 
   lastSendDay = currentDayOfWeek;
