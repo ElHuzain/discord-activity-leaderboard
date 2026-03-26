@@ -25,7 +25,3 @@ export function getBetween({
       leftAt: Math.min(end, session.leftAt),
     }));
 }
-
-export function getWeek(): Session[] {
-  return [];
-}
