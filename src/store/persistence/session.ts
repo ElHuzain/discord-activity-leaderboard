@@ -4,6 +4,7 @@ const FILE_PATH = "src/store/sessions.json";
 
 let data: Session[] = [];
 let isDirty = false;
+let isWriting = false;
 
 export function init(): void {
   try {
@@ -15,13 +16,18 @@ export function init(): void {
 }
 
 function shouldPersist() {
-  return isDirty;
+  return isDirty && !isWriting;
 }
 
 export function persist() {
   if (!shouldPersist()) return;
-  fs.writeFile(FILE_PATH, JSON.stringify(data), () => {});
+
+  isWriting = true;
   isDirty = false;
+
+  fs.writeFile(FILE_PATH, JSON.stringify(data), () => {
+    isWriting = false;
+  });
 }
 
 export function getStore(): Session[] {
