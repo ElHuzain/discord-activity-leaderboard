@@ -1,12 +1,12 @@
-import { getStore, markDirty } from "./persistence/session";
+import * as sessionStore from "./persistence/session";
 import * as archivedSessionStore from "./persistence/archived-session";
 
 export function save(session: Session): void {
-  const store = getStore();
+  const store = sessionStore.getStore();
 
   store.push(session);
 
-  markDirty();
+  sessionStore.markDirty();
 }
 
 export function getBetween({
@@ -16,7 +16,7 @@ export function getBetween({
   start?: number;
   end?: number;
 }): Session[] {
-  const store = getStore();
+  const store = sessionStore.getStore();
 
   return store
     .filter((session) => session.joinedAt <= end && session.leftAt >= start)
@@ -28,21 +28,21 @@ export function getBetween({
 }
 
 export async function archiveOlderThan(timestamp: number): Promise<void> {
-  const store = getStore();
+  const sessions = sessionStore.getStore();
 
   const archived: Session[] = [];
 
   // potential bug in the future: this reverts order of sessions
   // while currently doesnt matter, im just keeping it in mind
-  for (let i = store.length - 1; i >= 0; i--) {
-    if (store[i].leftAt < timestamp) {
-      archived.push({ ...store[i], isArchived: true });
-      store.splice(i, 1);
+  for (let i = sessions.length - 1; i >= 0; i--) {
+    if (sessions[i].leftAt < timestamp) {
+      archived.push({ ...sessions[i], isArchived: true });
+      sessions.splice(i, 1);
     }
   }
 
   if (archived.length === 0) return;
 
-  markDirty();
+  sessionStore.persist(true);
   await archivedSessionStore.save(archived);
 }

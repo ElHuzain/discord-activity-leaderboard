@@ -19,8 +19,8 @@ function shouldPersist() {
   return isDirty && !isWriting;
 }
 
-export function persist() {
-  if (!shouldPersist()) return;
+export function persist(force = false) {
+  if (!shouldPersist() && !force) return;
 
   isWriting = true;
   isDirty = false;

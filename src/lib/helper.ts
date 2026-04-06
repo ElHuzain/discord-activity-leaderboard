@@ -51,18 +51,8 @@ export function getYesterdayRange(): { start: number; end: number } {
 }
 
 export function getWeekRange(timestamp: number): { start: number; end: number } {
-  const date = new Date(timestamp);
-
-  const start = new Date(date);
-  start.setDate(date.getDate() - date.getDay());
-  start.setHours(0, 0, 0, 0);
-
-  const end = new Date(start);
-  end.setDate(start.getDate() + 6);
-  end.setHours(23, 59, 59, 999);
-
   return {
-    start: start.getTime(),
-    end: end.getTime(),
+    start: timestamp - 7 * 24 * 60 * 60 * 1000,
+    end: timestamp,
   };
 }
